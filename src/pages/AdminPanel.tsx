@@ -898,7 +898,7 @@ function BuildersTab() {
 
 export default function AdminPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#5271FF] via-[#E83F9B] to-[#FF6B00]">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #5271FF 0%, #E07CFF 25%, #E83F9B 50%, #FF3366 70%, #FF6B00 100%)' }}>
       <header className="sticky top-0 z-50 bg-black/30 backdrop-blur-md border-b border-white/20 px-4 py-3">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center gap-3">
