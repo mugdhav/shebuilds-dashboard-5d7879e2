@@ -213,7 +213,7 @@ export default function SubmitPage() {
               </Link>
               <Button
                 variant="outline"
-                className="w-full border-white/20 text-white hover:bg-white/10"
+                className="w-full border-white/20 text-white bg-transparent hover:bg-white/10"
                 onClick={() => {
                   setSubmitted(false);
                   setForm({ fullName: "", email: "", appName: "", appTopic: "", appLink: "" });
