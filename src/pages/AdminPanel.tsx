@@ -919,14 +919,22 @@ export default function AdminPage() {
               <p className="text-xs text-white/50">Manage hackathon dashboard</p>
             </div>
           </div>
-          <Link to="/">
-            <Badge
-              variant="secondary"
-              className="cursor-pointer bg-white/15 text-white hover:bg-white/25 border-white/20"
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => window.open('/Help.html', '_blank')}
+              className="cursor-pointer bg-white/15 text-white hover:bg-white/25 border border-white/20 rounded-md px-2.5 py-0.5 text-xs font-medium"
             >
-              View Dashboard
-            </Badge>
-          </Link>
+              Help
+            </button>
+            <Link to="/">
+              <Badge
+                variant="secondary"
+                className="cursor-pointer bg-white/15 text-white hover:bg-white/25 border-white/20"
+              >
+                View Dashboard
+              </Badge>
+            </Link>
+          </div>
         </div>
       </header>
 
