@@ -139,10 +139,10 @@ export default function Dashboard() {
           <GlowLogo />
 
           <div className="flex flex-col items-center">
-            <h1 className="text-3xl sm:text-4xl font-bold text-cyan-400 tracking-tight leading-none">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight leading-none">
               Pune Edition
             </h1>
-            <p className="text-white/50 text-sm mt-1">{formatCurrentTime(currentTime)}</p>
+            <p className="text-white text-xs font-bold mt-1">{currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false })} IST</p>
           </div>
 
           <div className="bg-black/30 border border-white/20 rounded-lg px-4 py-2.5 backdrop-blur-sm">

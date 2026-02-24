@@ -257,7 +257,7 @@ function SettingsTab() {
               placeholder="Topic name"
               value={topicForm.name}
               onChange={(e) => setTopicForm({ ...topicForm, name: e.target.value })}
-              className="flex-1"
+              className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/40"
             />
             <Input
               type="number"
@@ -265,7 +265,7 @@ function SettingsTab() {
               max="10"
               value={topicForm.weight}
               onChange={(e) => setTopicForm({ ...topicForm, weight: e.target.value })}
-              className="w-16 text-center"
+              className="w-16 text-center bg-white/10 border-white/20 text-white"
               title="Weight"
             />
             <Button type="submit" disabled={addTopicMutation.isPending}>
@@ -670,7 +670,7 @@ function BuildersTab() {
               placeholder="Search by name, email, or ticket…"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-9"
+              className="pl-9 bg-white/10 border-white/20 text-white placeholder:text-white/40"
             />
           </div>
 
@@ -757,6 +757,7 @@ function BuildersTab() {
                           maxLength={25}
                           value={editForm.projectName}
                           onChange={(e) => setEditForm({ ...editForm, projectName: e.target.value })}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
                         />
                       </div>
                       <div>
@@ -766,6 +767,7 @@ function BuildersTab() {
                           maxLength={25}
                           value={editForm.appTopic}
                           onChange={(e) => setEditForm({ ...editForm, appTopic: e.target.value })}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
                         />
                       </div>
                     </div>
@@ -818,6 +820,7 @@ function BuildersTab() {
                           placeholder="e.g. just launched their MVP!"
                           value={activityForm.action}
                           onChange={(e) => setActivityForm({ ...activityForm, action: e.target.value })}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
                         />
                         <div className="flex items-center gap-1.5 flex-wrap">
                           {EMOJI_OPTIONS.map((opt) => (
