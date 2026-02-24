@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SheBuilds Dashboard Help</title>
+<style>
+  /* ── Reset & base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f0a1a;
+    --surface:   #1a1030;
+    --surface2:  #221540;
+    --border:    #3a2060;
+    --accent:    #c026d3;
+    --accent2:   #a855f7;
+    --text:      #e8ddf8;
+    --text-muted:#9d86c8;
+    --code-bg:   #130e24;
+    --sidebar-w: 260px;
+    --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  #sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  #sidebar .logo-area {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: 0 1.25rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1rem;
+  }
+
+  #sidebar .logo-area img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  #sidebar .logo-area span {
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--accent2);
+    letter-spacing: .03em;
+    line-height: 1.2;
+  }
+
+  #sidebar nav a {
+    display: block;
+    padding: .38rem 1.25rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: .82rem;
+    border-left: 2px solid transparent;
+    transition: color .15s, border-color .15s;
+  }
+
+  #sidebar nav a:hover,
+  #sidebar nav a.active {
+    color: var(--accent2);
+    border-left-color: var(--accent);
+  }
+
+  #sidebar nav .nav-section {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text-muted);
+    padding: .9rem 1.25rem .2rem;
+    opacity: .6;
+  }
+
+  #sidebar nav .nav-sub {
+    padding-left: 2rem;
+  }
+
+  /* ── Resize handle ── */
+  #resize-handle {
+    position: absolute;
+    top: 0; right: -4px; bottom: 0;
+    width: 8px;
+    cursor: col-resize;
+    z-index: 200;
+    background: transparent;
+    transition: background .15s;
+  }
+
+  #resize-handle:hover,
+  #resize-handle.dragging {
+    background: var(--accent);
+    opacity: .45;
+  }
+
+  /* ── Main content ── */
+  #main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 2.5rem 3rem 4rem;
+    max-width: 900px;
+  }
+
+  /* ── Typography ── */
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #e040fb, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: .3rem;
+  }
+
+  .page-subtitle {
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+    font-size: .95rem;
+  }
+
+  h2 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--accent2);
+    margin: 2.5rem 0 1rem;
+    padding-bottom: .4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #d8b4fe;
+    margin: 1.6rem 0 .6rem;
+  }
+
+  h4 {
+    font-size: .95rem;
+    font-weight: 600;
+    color: #c4b5fd;
+    margin: 1.2rem 0 .4rem;
+  }
+
+  p { margin-bottom: .9rem; }
+  p:last-child { margin-bottom: 0; }
+
+  strong { color: #e9d5ff; }
+
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Sections ── */
+  .section {
+    margin-bottom: 3rem;
+  }
+
+  /* ── Screenshots ── */
+  .screenshot-float {
+    float: right;
+    margin: 0 0 1rem 1.5rem;
+    max-width: 480px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 24px rgba(0,0,0,.5);
+  }
+
+  .screenshot-float.narrow  { max-width: 300px; }
+  .screenshot-float.narrow2 { max-width: 280px; }
+  .screenshot-float.narrow3 { max-width: 255px; }
+  .screenshot-float.narrow4 { max-width: 380px; }
+
+  .clearfix::after { content: ""; display: table; clear: both; }
+
+  /* ── Lists ── */
+  ul, ol {
+    padding-left: 1.4rem;
+    margin-bottom: .9rem;
+  }
+
+  li { margin-bottom: .25rem; }
+
+  ul ul { margin-top: .2rem; margin-bottom: .2rem; }
+
+  /* ── Code ── */
+  code {
+    font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+    font-size: .85em;
+    background: var(--code-bg);
+    color: #c4b5fd;
+    padding: .1em .35em;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin: .75rem 0 1rem;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: .88rem;
+    color: #d8b4fe;
+  }
+
+  /* ── Tables ── */
+  .table-wrap { overflow-x: auto; margin: .75rem 0 1.25rem; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .88rem;
+  }
+
+  th {
+    background: var(--surface2);
+    color: var(--accent2);
+    font-weight: 600;
+    text-align: left;
+    padding: .55rem .85rem;
+    border: 1px solid var(--border);
+  }
+
+  td {
+    padding: .5rem .85rem;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tr:nth-child(even) td { background: #16092e44; }
+
+
+  /* ── Header area ── */
+  .page-header {
+    margin-bottom: .5rem;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    #sidebar { display: none; }
+    #main { margin-left: 0; padding: 1.5rem 1.25rem 3rem; }
+    .screenshot-float,
+    .screenshot-float.narrow,
+    .screenshot-float.narrow2,
+    .screenshot-float.narrow3,
+    .screenshot-float.narrow4 {
+      float: none;
+      margin: 0 0 1rem 0;
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ SIDEBAR ══════════════ -->
+<nav id="sidebar">
+  <div id="resize-handle"></div>
+  <div class="logo-area">
+    <img src="/shebuilds-logo.png" alt="SheBuilds logo">
+    <span>SheBuilds<br>Dashboard Help</span>
+  </div>
+  <nav>
+    <a href="#overview">Overview</a>
+
+    <div class="nav-section">Dashboard</div>
+    <a href="#dashboard" class="nav-sub">Live Display</a>
+
+    <div class="nav-section">Admin Guide</div>
+    <a href="#admin-access" class="nav-sub">Accessing the Panel</a>
+    <a href="#admin-settings" class="nav-sub">Settings Tab</a>
+    <a href="#admin-builders" class="nav-sub">Builders Tab</a>
+    <a href="#admin-edit" class="nav-sub">Edit Panel</a>
+    <a href="#admin-activity" class="nav-sub">Post Activity</a>
+    <a href="#admin-recent" class="nav-sub">Recent Activity</a>
+
+    <div class="nav-section">Builder Guide</div>
+    <a href="#builder-submit" class="nav-sub">Submitting Your App</a>
+    <a href="#builder-after" class="nav-sub">After You Submit</a>
+    <a href="#builder-troubleshoot" class="nav-sub">Troubleshooting</a>
+
+  </nav>
+</nav>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<main id="main">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <h1>SheBuilds Dashboard</h1>
+  </div>
+  <p class="page-subtitle">Real-time hackathon dashboard — help &amp; reference guide</p>
+
+  <!-- ── Overview ── -->
+  <section class="section" id="overview">
+    <h2>Overview</h2>
+    <p>
+      SheBuilds Dashboard is a real-time hackathon dashboard that displays live statistics,
+      trending topics, builder spotlights, an activity feed, and a countdown timer. Data is
+      managed through a browser-based admin panel accessible from any device.
+    </p>
+    <p>The dashboard updates automatically via WebSocket — no manual refresh is needed.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Page</th><th>URL</th><th>Who uses it</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Dashboard</strong></td>
+            <td><code>/</code></td>
+            <td>Projected on screen during the event (read-only live view)</td>
+          </tr>
+          <tr>
+            <td><strong>Admin Panel</strong></td>
+            <td><code>/admin</code></td>
+            <td>Organiser — manage builders, stats, topics</td>
+          </tr>
+          <tr>
+            <td><strong>Builder Submit</strong></td>
+            <td><code>/submit</code></td>
+            <td>Hackathon participants — submit their app</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── Dashboard Display ── -->
+  <section class="section" id="dashboard">
+    <h2>Dashboard Display</h2>
+    <div class="clearfix">
+      <img
+        class="screenshot-float"
+        src="docs/screenshots/HackathonDashboard.png"
+        alt="Live hackathon dashboard showing stats row with active builders and countdown timer, builder spotlight card, live activity feed, and trending topics word cloud">
+
+      <p>
+        The main dashboard at <code>/</code> is designed to be projected on a large screen.
+        It shows:
+      </p>
+      <ul>
+        <li><strong>Stats Row</strong> — Active Builders, Completed Apps, In Progress (auto-calculated), and a Countdown Timer</li>
+        <li><strong>Builder Spotlight</strong> — Featured builder with their project details, set by the admin</li>
+        <li><strong>Live Activity Feed</strong> — Real-time stream of builder actions and milestones</li>
+        <li><strong>Trending Topics Word Cloud</strong> — Visual display of popular app topics</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Administrator Guide ── -->
+  <section class="section" id="admin-access">
+    <h2>Administrator Guide</h2>
+    <h3>Accessing the Admin Panel</h3>
+    <p>
+      Navigate to <code>/admin</code>. The admin panel is mobile-friendly and works on phones,
+      tablets, and desktops.
+    </p>
+  </section>
+
+  <section class="section" id="admin-settings">
+    <h3>Settings Tab</h3>
+    <div class="clearfix">
+      <img
+        class="screenshot-float narrow2"
+        src="docs/screenshots/Admin_Interface_Settings.png"
+        alt="Admin panel Settings tab showing hackathon start and end time inputs, Set to Now button, Save Settings button, and trending topics list with weight controls">
+
+      <h4>Hackathon Timing</h4>
+      <ol>
+        <li>Set the <strong>Hackathon Start Time</strong> and <strong>End Time</strong> to control the countdown timer</li>
+        <li>Click <strong>Set to Now (+3h end)</strong> to use the current time as start and auto-set end time 3 hours later</li>
+        <li>Click <strong>Save Settings</strong> — changes appear on the dashboard immediately</li>
+      </ol>
+
+      <h4>Trending Topics</h4>
+      <ol>
+        <li>Enter a topic name and set its weight (1–10; higher weight = larger text in the word cloud)</li>
+        <li>Click <strong>Add Topic</strong></li>
+        <li>Delete topics with the trash icon</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="admin-builders">
+    <h3>Builders Tab</h3>
+    <div class="clearfix">
+      <img
+        class="screenshot-float narrow"
+        src="docs/screenshots/Admin_Interface_Builders.png"
+        alt="Admin panel Builders tab showing CSV import upload area, builder list with search bar, builder rows with avatar and action icons, and Recent Activity section">
+
+      <h4>Import from CSV</h4>
+      <ol>
+        <li>Click the upload area under <strong>Import from CSV</strong> and select your Luma guest export CSV</li>
+        <li>The importer automatically detects columns by fuzzy name match (Name, Email, Ticket, Check-in Status)</li>
+        <li>Click <strong>Import Builders</strong></li>
+        <li>Duplicates are automatically skipped (matched by Luma guest ID, email, or ticket number)</li>
+        <li>After import, the Active Builders count updates automatically and an import summary is shown</li>
+      </ol>
+
+      <h4>Builder List</h4>
+      <ul>
+        <li><strong>Search</strong> — Filter by name, email, or ticket number</li>
+        <li>Each row shows: avatar, name, badges (Spotlight / Checked-in), build status emoji, project name</li>
+        <li><strong>Edit</strong> (pencil icon) — Opens the inline edit panel</li>
+        <li><strong>Spotlight</strong> (star icon) — Features the builder in the dashboard spotlight (only one at a time)</li>
+        <li><strong>Delete</strong> (trash icon) — Removes the builder</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="admin-edit">
+    <h3>Edit Panel (inline)</h3>
+    <div class="clearfix">
+      <img
+        class="screenshot-float narrow"
+        src="docs/screenshots/Admin_Interface_Builders_BuilderUpdates.png"
+        alt="Inline edit panel open beneath a builder row, showing App Name and App Topic text fields, Build Status dropdown, and Post Activity section with placeholder text">
+
+      <p>
+        When you click the pencil icon on a builder row, an edit panel opens below it:
+      </p>
+      <ul>
+        <li><strong>App Name</strong> — 25 characters max</li>
+        <li><strong>App Topic</strong> — 25 characters max; starts autocomplete suggestions from existing topics</li>
+        <li><strong>Build Status</strong> — Dropdown: designing / building / testing</li>
+      </ul>
+      <p>Changing the build status automatically posts an activity entry to the live feed.</p>
+    </div>
+  </section>
+
+  <section class="section" id="admin-activity">
+    <h3>Post Activity</h3>
+    <div class="clearfix">
+      <img
+        class="screenshot-float narrow"
+        src="docs/screenshots/Admin_Interface_Builders_BuilderActivity01.png"
+        alt="Post Activity panel showing a text input with 'Just submitted a new app', a row of ten emoji options, and a Post Activity button; Recent Activity list visible below">
+
+      <p>Manually post a custom activity entry for a builder:</p>
+      <ul>
+        <li>Enter action text and select an emoji (10 options)</li>
+        <li>Click <strong>Post Activity</strong> — appears on the dashboard feed immediately</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="admin-recent">
+    <h3>Recent Activity</h3>
+    <div class="clearfix">
+      <img
+        class="screenshot-float narrow4"
+        src="docs/screenshots/Admin_Interface_Builders_BuilderActivity02.png"
+        alt="Recent Activity list showing five entries with builder names, action descriptions, emoji icons, and delete buttons">
+
+      <p>Lists the last 50 activity entries. Delete individual entries with the trash icon.</p>
+    </div>
+  </section>
+
+  <!-- ── Builder Guide ── -->
+  <section class="section" id="builder-submit">
+    <h2>Builder Guide</h2>
+    <h3>Submitting Your App</h3>
+    <div class="clearfix">
+      <img
+        class="screenshot-float narrow3"
+        src="docs/screenshots/Builder_Interface.png"
+        alt="Builder submission form with fields for Full Name, Email, App Name, App Topic, and App Link, and a Submit App button at the bottom">
+
+      <ol>
+        <li>Navigate to <code>/submit</code></li>
+        <li>
+          Fill in the form:
+          <ul>
+            <li><strong>Full Name</strong> <em>(required)</em> — Your name as you'd like it displayed (min 2 characters)</li>
+            <li><strong>Email</strong> <em>(required)</em> — Your contact email</li>
+            <li><strong>App Name</strong> <em>(required)</em> — 25 characters max</li>
+            <li><strong>App Topic</strong> <em>(optional)</em> — Short description of your app (25 characters max); shows autocomplete suggestions</li>
+            <li><strong>App Link</strong> <em>(optional)</em> — URL to your deployed app (must be a valid URL)</li>
+          </ul>
+        </li>
+        <li>Click <strong>Submit App</strong></li>
+        <li>On success you'll see a confirmation screen with an option to view the live dashboard</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="builder-after">
+    <h3>What Happens After You Submit</h3>
+    <ul>
+      <li>Your submission is recorded and deduplicated by email — re-submitting updates your existing entry</li>
+      <li>The <strong>In Progress</strong> count on the dashboard updates automatically (calculated as <code>Active Builders − distinct submitters</code>)</li>
+      <li>An activity entry appears in the live feed with your name and app name</li>
+      <li>An administrator may feature your project in the <strong>Builder Spotlight</strong></li>
+    </ul>
+  </section>
+
+  <section class="section" id="builder-troubleshoot">
+    <h3>Troubleshooting</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Message</th><th>What to do</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>"Full name must be at least 2 characters"</td><td>Enter your full name.</td></tr>
+          <tr><td>"Please enter a valid email address"</td><td>Check your email format.</td></tr>
+          <tr><td>"App name is required"</td><td>App name cannot be blank.</td></tr>
+          <tr><td>"App name must be 25 characters or less"</td><td>Shorten your app name.</td></tr>
+          <tr><td>"App topic must be 25 characters or less"</td><td>Shorten your app topic description.</td></tr>
+          <tr><td>"Please enter a valid URL"</td><td>Make sure your link is a complete, valid URL (e.g. <code>https://your-app.example.com</code>).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+
+</main>
+
+<script>
+  // ── Scroll-spy: highlight active sidebar link ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('#sidebar nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`#sidebar nav a[href="#${entry.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // ── Resizable sidebar ──
+  const sidebar  = document.getElementById('sidebar');
+  const main     = document.getElementById('main');
+  const handle   = document.getElementById('resize-handle');
+  const MIN_W    = 160;
+  const MAX_W    = 480;
+
+  let dragging = false;
+  let startX, startW;
+
+  handle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX   = e.clientX;
+    startW   = sidebar.offsetWidth;
+    handle.classList.add('dragging');
+    document.body.style.cursor    = 'col-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const newW = Math.min(MAX_W, Math.max(MIN_W, startW + (e.clientX - startX)));
+    sidebar.style.width    = newW + 'px';
+    main.style.marginLeft  = newW + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    document.body.style.cursor     = '';
+    document.body.style.userSelect = '';
+  });
+</script>
+
+</body>
+</html>
