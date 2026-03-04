@@ -11,6 +11,9 @@ export default defineConfig(({ mode }) => {
   const resolvedPublishableKey =
     env.VITE_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY || "";
 
+  process.env.VITE_SUPABASE_URL = resolvedBackendUrl;
+  process.env.VITE_SUPABASE_PUBLISHABLE_KEY = resolvedPublishableKey;
+
   return {
     server: {
       host: "::",
@@ -20,8 +23,15 @@ export default defineConfig(({ mode }) => {
       },
     },
     define: {
-      "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(resolvedBackendUrl),
-      "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify(resolvedPublishableKey),
+      "import.meta.env": JSON.stringify({
+        BASE_URL: "/",
+        DEV: mode === "development",
+        MODE: mode,
+        PROD: mode === "production",
+        SSR: false,
+        VITE_SUPABASE_URL: resolvedBackendUrl,
+        VITE_SUPABASE_PUBLISHABLE_KEY: resolvedPublishableKey,
+      }),
     },
     plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
     resolve: {
