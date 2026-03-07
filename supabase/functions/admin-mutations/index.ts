@@ -1,6 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const ADMIN_HASH = Deno.env.get("ADMIN_PASSWORD_HASH") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
@@ -19,9 +18,14 @@ function json(data: unknown, status = 200) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
-  // ── Auth ────────────────────────────────────────────────────────────────────
+  // ── Auth: validate Supabase JWT ──────────────────────────────────────────────
   const token = (req.headers.get("Authorization") ?? "").replace("Bearer ", "");
-  if (!ADMIN_HASH || token !== ADMIN_HASH) return json({ error: "Unauthorized" }, 401);
+  if (!token) return json({ error: "Unauthorized" }, 401);
+
+  const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+  const { data: { user }, error: authError } = await db.auth.getUser(token);
+  if (authError || !user) return json({ error: "Unauthorized" }, 401);
 
   // ── Parse body ───────────────────────────────────────────────────────────────
   let operation: string, payload: any;
@@ -31,7 +35,6 @@ Deno.serve(async (req) => {
     return json({ error: "Invalid JSON" }, 400);
   }
 
-  const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   let result: any = null;
 
   try {

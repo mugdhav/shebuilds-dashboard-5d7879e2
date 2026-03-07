@@ -1,53 +1,50 @@
-import { useState, ReactNode } from "react";
+import { useState, useEffect, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Lock } from "lucide-react";
-import { ADMIN_HASH } from "@/lib/adminConfig";
 
-const STORAGE_KEY = "admin_authed";
-
-async function sha256hex(text: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(text);
-  const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(hashBuffer))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
+// Email of the admin Supabase Auth user — not a secret.
+const ADMIN_EMAIL = "admin@shebuilds.com";
 
 interface Props {
   children: ReactNode;
 }
 
 export function AdminAuthGuard({ children }: Props) {
-  const [authed, setAuthed] = useState(
-    () => sessionStorage.getItem(STORAGE_KEY) === "1"
-  );
+  const [authed, setAuthed] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [checking, setChecking] = useState(false);
+  const [signing, setSigning] = useState(false);
 
+  // Restore existing Supabase session on mount
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAuthed(!!session);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) return null;
   if (authed) return <>{children}</>;
-
-  const expectedHash = ADMIN_HASH;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setChecking(true);
+    setSigning(true);
     setError("");
-    try {
-      const hash = await sha256hex(password);
-      if (hash === expectedHash) {
-        sessionStorage.setItem(STORAGE_KEY, "1");
-        setAuthed(true);
-      } else {
-        setError("Incorrect password.");
-        setPassword("");
-      }
-    } finally {
-      setChecking(false);
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email: ADMIN_EMAIL,
+      password,
+    });
+    if (authError) {
+      setError("Incorrect password.");
+      setPassword("");
+    } else {
+      setAuthed(true);
     }
+    setSigning(false);
   }
 
   return (
@@ -69,15 +66,13 @@ export function AdminAuthGuard({ children }: Props) {
               autoFocus
               className="bg-white/5 border-white/20 text-white placeholder:text-white/40"
             />
-            {error && (
-              <p className="text-sm text-rose-400">{error}</p>
-            )}
+            {error && <p className="text-sm text-rose-400">{error}</p>}
             <Button
               type="submit"
-              disabled={checking || !password}
+              disabled={signing || !password}
               className="w-full bg-purple-700 hover:bg-purple-600 text-white"
             >
-              {checking ? "Checking…" : "Enter"}
+              {signing ? "Checking…" : "Enter"}
             </Button>
           </form>
         </CardContent>
