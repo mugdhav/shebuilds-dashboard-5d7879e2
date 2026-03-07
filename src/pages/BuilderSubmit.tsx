@@ -90,53 +90,20 @@ export default function SubmitPage() {
 
   const submitMutation = useMutation({
     mutationFn: async (data: typeof form) => {
-      // Check for existing submission by email (upsert behavior)
-      const { data: existing } = await supabase
-        .from("submissions")
-        .select("id")
-        .eq("email", data.email.trim())
-        .limit(1);
-
-      const isNew = !existing || existing.length === 0;
-
-      if (isNew) {
-        const { error } = await supabase.from("submissions").insert({
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+      const res = await fetch(`${supabaseUrl}/functions/v1/submit-app`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           full_name: data.fullName.trim(),
           email: data.email.trim(),
           app_name: data.appName.trim(),
           app_topic: data.appTopic.trim() || null,
           app_link: data.appLink.trim() || null,
-        });
-        if (error) throw error;
-
-        // Post activity
-        await supabase.from("activities").insert({
-          participant_name: data.fullName.trim(),
-          action: `submitted "${data.appName.trim()}"`,
-          emoji: "🏆",
-        });
-      } else {
-        const { error } = await supabase
-          .from("submissions")
-          .update({
-            full_name: data.fullName.trim(),
-            app_name: data.appName.trim(),
-            app_topic: data.appTopic.trim() || null,
-            app_link: data.appLink.trim() || null,
-          })
-          .eq("email", data.email.trim());
-        if (error) throw error;
-      }
-
-      // Auto-create topic if not existing
-      if (data.appTopic.trim()) {
-        const topicExists = topicsList.some(
-          (t) => t.name.toLowerCase() === data.appTopic.trim().toLowerCase()
-        );
-        if (!topicExists) {
-          await supabase.from("topics").insert({ name: data.appTopic.trim() });
-        }
-      }
+        }),
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error ?? "Submission failed");
     },
     onSuccess: () => {
       setSubmitted(true);
