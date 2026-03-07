@@ -91,7 +91,7 @@ export default function SubmitPage() {
 
   const submitMutation = useMutation({
     mutationFn: async (data: typeof form) => {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://fhyuvjznkaklefkxvgse.supabase.co";
       const res = await fetch(`${supabaseUrl}/functions/v1/submit-app`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
