@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Wifi, UserPlus, LogIn, FileText, Rocket, HelpCircle } from "lucide-react";
+import { Wifi, ClipboardList, UserPlus, LogIn, FileText, Rocket, HelpCircle } from "lucide-react";
 
 const steps = [
   {
@@ -11,6 +11,23 @@ const steps = [
   },
   {
     number: 2,
+    emoji: "📋",
+    icon: ClipboardList,
+    title: "Fill pre-event survey",
+    content: (
+      <ul className="list-disc list-inside text-white/70 space-y-1 mt-2">
+        <li>
+          Visit{" "}
+          <a href="https://shebuilds-survey.lovable.app" target="_blank" rel="noopener noreferrer" className="underline text-cyan-300 hover:text-cyan-200">
+            shebuilds-survey.lovable.app
+          </a>{" "}
+          and complete the survey
+        </li>
+      </ul>
+    ),
+  },
+  {
+    number: 3,
     emoji: "🔐",
     icon: UserPlus,
     title: "Create Lovable Account",
@@ -29,14 +46,14 @@ const steps = [
     ),
   },
   {
-    number: 3,
+    number: 4,
     emoji: "🔑",
     icon: LogIn,
     title: "Log into Lovable account",
     content: null,
   },
   {
-    number: 4,
+    number: 5,
     emoji: "📝",
     icon: FileText,
     title: "Submit your details",
@@ -71,8 +88,9 @@ export default function Prep() {
       </div>
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 py-12">
-        {/* Help button */}
-        <div className="flex justify-end mb-4">
+        {/* Top bar: logo + help */}
+        <div className="flex items-center justify-between mb-4">
+          <img src="/shebuilds-logo.png" alt="SheBuilds" className="h-10 ml-1" />
           <button
             onClick={() => window.open("/Help.html", "_blank")}
             className="flex items-center gap-1.5 text-white/60 hover:text-white/90 transition-colors text-sm"
@@ -105,7 +123,7 @@ export default function Prep() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.15 * i }}
-              className="bg-white/10 backdrop-blur-md border border-white/10 rounded-xl p-5 flex gap-4"
+              className="bg-black/30 backdrop-blur-md border border-white/20 rounded-xl p-5 flex gap-4"
             >
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-lg font-bold text-white">
                 {step.number}
