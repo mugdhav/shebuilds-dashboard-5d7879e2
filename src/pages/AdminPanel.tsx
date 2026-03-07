@@ -16,6 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import type { Participant, Activity, Topic, HackathonSettings } from "@/types/hackathon";
 import { adminApi } from "@/lib/adminApi";
+import { adminFriendlyError } from "@/lib/errorMessages";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -101,8 +102,10 @@ function SettingsTab() {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast({ title: "Settings saved" });
     },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
+    onError: (err: Error) => {
+      console.error("Settings update error:", err);
+      toast({ title: "Error", description: adminFriendlyError(err), variant: "destructive" });
+    },
   });
 
   const handleStartChange = (value: string) => {
@@ -153,8 +156,10 @@ function SettingsTab() {
       setTopicForm({ name: "", weight: "1" });
       toast({ title: "Topic added" });
     },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
+    onError: (err: Error) => {
+      console.error("Topic add error:", err);
+      toast({ title: "Error", description: adminFriendlyError(err), variant: "destructive" });
+    },
   });
 
   const deleteTopicMutation = useMutation({
@@ -408,7 +413,8 @@ function CsvImporter() {
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err: any) {
-      toast({ title: "Import failed", description: err.message, variant: "destructive" });
+      console.error("CSV import error:", err);
+      toast({ title: "Import failed", description: adminFriendlyError(err), variant: "destructive" });
     }
 
     setIsImporting(false);
@@ -575,8 +581,10 @@ function BuildersTab() {
       toast({ title: "Builder updated" });
       setEditingId(null);
     },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
+    onError: (err: Error) => {
+      console.error("Builder update error:", err);
+      toast({ title: "Error", description: adminFriendlyError(err), variant: "destructive" });
+    },
   });
 
   const postActivityMutation = useMutation({
@@ -589,8 +597,10 @@ function BuildersTab() {
       setActivityForm({ action: "", emoji: "🚀" });
       toast({ title: "Activity posted" });
     },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
+    onError: (err: Error) => {
+      console.error("Activity post error:", err);
+      toast({ title: "Error", description: adminFriendlyError(err), variant: "destructive" });
+    },
   });
 
   const deleteActivityMutation = useMutation({

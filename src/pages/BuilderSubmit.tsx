@@ -13,6 +13,7 @@ import {
   CheckCircle2, ArrowLeft, AlertCircle
 } from "lucide-react";
 import type { Topic } from "@/types/hackathon";
+import { userFriendlyError } from "@/lib/errorMessages";
 
 interface FieldErrors {
   fullName?: string;
@@ -111,9 +112,10 @@ export default function SubmitPage() {
       toast({ title: "Submission received!" });
     },
     onError: (err: Error) => {
+      console.error("Submission error:", err);
       toast({
         title: "Submission failed",
-        description: err.message,
+        description: userFriendlyError(err),
         variant: "destructive",
       });
     },
