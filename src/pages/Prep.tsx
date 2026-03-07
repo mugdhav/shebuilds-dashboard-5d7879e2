@@ -6,13 +6,8 @@ const steps = [
     number: 1,
     emoji: "📶",
     icon: Wifi,
-    title: "Connect to WiFi",
-    content: (
-      <ul className="list-disc list-inside text-white/70 space-y-1 mt-2">
-        <li>Network: <span className="font-semibold text-white/90">SheBuilds-WiFi</span></li>
-        <li>Password: <span className="font-semibold text-white/90">shebuilds2025</span></li>
-      </ul>
-    ),
+    title: "Connect to WeWork WiFi or personal mobile hotspot",
+    content: null,
   },
   {
     number: 2,
@@ -29,7 +24,7 @@ const steps = [
           </a>{" "}
           in a browser
         </li>
-        <li>Create account (preferably with SheBuilds registration email)</li>
+        <li>Create account with your SheBuilds registration email.</li>
       </ul>
     ),
   },
@@ -37,7 +32,7 @@ const steps = [
     number: 3,
     emoji: "🔑",
     icon: LogIn,
-    title: "Log into lovable.dev account",
+    title: "Log into Lovable account",
     content: null,
   },
   {
@@ -53,8 +48,9 @@ const steps = [
             shebuilds-dashboard.lovable.app/submit
           </a>
         </li>
-        <li>Enter: your name, email (from SheBuilds registration), tentative app name, description</li>
-        <li className="text-white/50 italic">Note: App name and description can be changed later.</li>
+        <li>Enter: your name, email (from SheBuilds registration), tentative app name, description
+          <p className="ml-4 mt-1 text-white/50 italic">Note: App name and description can be changed later.</p>
+        </li>
       </ul>
     ),
   },
