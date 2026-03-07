@@ -156,8 +156,10 @@ function SettingsTab() {
       setTopicForm({ name: "", weight: "1" });
       toast({ title: "Topic added" });
     },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
+    onError: (err: Error) => {
+      console.error("Topic add error:", err);
+      toast({ title: "Error", description: adminFriendlyError(err), variant: "destructive" });
+    },
   });
 
   const deleteTopicMutation = useMutation({
