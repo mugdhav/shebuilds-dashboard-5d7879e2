@@ -597,8 +597,10 @@ function BuildersTab() {
       setActivityForm({ action: "", emoji: "🚀" });
       toast({ title: "Activity posted" });
     },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
+    onError: (err: Error) => {
+      console.error("Activity post error:", err);
+      toast({ title: "Error", description: adminFriendlyError(err), variant: "destructive" });
+    },
   });
 
   const deleteActivityMutation = useMutation({
