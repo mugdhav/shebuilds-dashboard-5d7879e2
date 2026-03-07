@@ -299,6 +299,7 @@
 
     <div class="nav-section">Admin Guide</div>
     <a href="#admin-access" class="nav-sub">Accessing the Panel</a>
+    <a href="#admin-auth" class="nav-sub">Password Gate</a>
     <a href="#admin-settings" class="nav-sub">Settings Tab</a>
     <a href="#admin-builders" class="nav-sub">Builders Tab</a>
     <a href="#admin-edit" class="nav-sub">Edit Panel</a>
@@ -346,7 +347,7 @@
           <tr>
             <td><strong>Admin Panel</strong></td>
             <td><code>/admin</code></td>
-            <td>Organiser — manage builders, stats, topics</td>
+            <td>Organiser — manage builders, stats, topics <em>(password required)</em></td>
           </tr>
           <tr>
             <td><strong>Builder Submit</strong></td>
@@ -386,7 +387,31 @@
     <h3>Accessing the Admin Panel</h3>
     <p>
       Navigate to <code>/admin</code>. The admin panel is mobile-friendly and works on phones,
-      tablets, and desktops.
+      tablets, and desktops. A password prompt is shown on first visit — see
+      <a href="#admin-auth">Password Gate</a> below.
+    </p>
+  </section>
+
+  <section class="section" id="admin-auth">
+    <h3>Password Gate</h3>
+    <p>
+      The admin panel is protected by a password to prevent unauthorised changes to the live
+      dashboard during the event.
+    </p>
+    <ol>
+      <li>Navigate to <code>/admin</code> — a lock screen is displayed</li>
+      <li>Enter the admin password provided by the event organiser and click <strong>Enter</strong></li>
+      <li>On success you are taken directly to the admin panel</li>
+      <li>Your session remains active for the duration of the browser tab — closing the tab or browser requires re-authentication</li>
+    </ol>
+    <p>
+      If you see <em>"Incorrect password"</em>, double-check the password (it is case-sensitive)
+      and try again. The field clears automatically on each failed attempt.
+    </p>
+    <p>
+      <strong>Organiser note:</strong> The password is pre-configured before the event.
+      To change it, update the hash in <code>src/lib/adminConfig.ts</code> using
+      a SHA-256 of the new password and redeploy.
     </p>
   </section>
 
@@ -472,7 +497,7 @@
 
       <p>Manually post a custom activity entry for a builder:</p>
       <ul>
-        <li>Enter action text and select an emoji (10 options)</li>
+        <li>Enter action text (500 characters max) and select an emoji (10 options)</li>
         <li>Click <strong>Post Activity</strong> — appears on the dashboard feed immediately</li>
       </ul>
     </div>
@@ -509,7 +534,7 @@
             <li><strong>Email</strong> <em>(required)</em> — Your contact email</li>
             <li><strong>App Name</strong> <em>(required)</em> — 25 characters max</li>
             <li><strong>App Topic</strong> <em>(optional)</em> — Short description of your app (25 characters max); shows autocomplete suggestions</li>
-            <li><strong>App Link</strong> <em>(optional)</em> — URL to your deployed app (must be a valid URL)</li>
+            <li><strong>App Link</strong> <em>(optional)</em> — URL to your deployed app; must start with <code>http://</code> or <code>https://</code></li>
           </ul>
         </li>
         <li>Click <strong>Submit App</strong></li>
@@ -541,7 +566,7 @@
           <tr><td>"App name is required"</td><td>App name cannot be blank.</td></tr>
           <tr><td>"App name must be 25 characters or less"</td><td>Shorten your app name.</td></tr>
           <tr><td>"App topic must be 25 characters or less"</td><td>Shorten your app topic description.</td></tr>
-          <tr><td>"Please enter a valid URL"</td><td>Make sure your link is a complete, valid URL (e.g. <code>https://your-app.example.com</code>).</td></tr>
+          <tr><td>"Please enter a valid URL"</td><td>Make sure your link is a complete URL starting with <code>https://</code> (e.g. <code>https://your-app.example.com</code>). Plain <code>http://</code> links are also accepted. Links without a protocol are rejected.</td></tr>
         </tbody>
       </table>
     </div>
