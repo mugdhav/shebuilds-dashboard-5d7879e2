@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Lock } from "lucide-react";
+import { ADMIN_HASH } from "@/lib/adminConfig";
 
 const STORAGE_KEY = "admin_authed";
 
@@ -29,7 +30,7 @@ export function AdminAuthGuard({ children }: Props) {
 
   if (authed) return <>{children}</>;
 
-  const expectedHash = "ef967844421a39fa1157773bed6d54932ceddf506b918451bad55745f59d933f";
+  const expectedHash = ADMIN_HASH;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

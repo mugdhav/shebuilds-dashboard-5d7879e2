@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Participant, Activity, Topic, HackathonSettings } from "@/types/hackathon";
+import { adminApi } from "@/lib/adminApi";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -93,8 +94,7 @@ function SettingsTab() {
 
   const updateTimeMutation = useMutation({
     mutationFn: async (payload: { start_time?: string; end_time?: string }) => {
-      const { error } = await supabase.from("hackathon_settings").update(payload).eq("id", settings?.id || 1);
-      if (error) throw error;
+      await adminApi("settings.update", { id: settings?.id ?? 1, data: payload });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
@@ -145,8 +145,7 @@ function SettingsTab() {
 
   const addTopicMutation = useMutation({
     mutationFn: async (data: { name: string; weight: number }) => {
-      const { error } = await supabase.from("topics").insert(data);
-      if (error) throw error;
+      await adminApi("topics.insert", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-topics"] });
@@ -160,8 +159,7 @@ function SettingsTab() {
 
   const deleteTopicMutation = useMutation({
     mutationFn: async (id: number) => {
-      const { error } = await supabase.from("topics").delete().eq("id", id);
-      if (error) throw error;
+      await adminApi("topics.delete", { id });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-topics"] });
@@ -354,10 +352,8 @@ function CsvImporter() {
         return;
       }
 
-      // Parse CSV rows (simple parsing for non-quoted fields)
-      let imported = 0;
-      let skipped = 0;
-
+      // Build rows array client-side (no DB calls here)
+      const rows = [];
       for (let i = 1; i < lines.length; i++) {
         const cols = lines[i].split(",").map((c) => c.trim().replace(/^"|"$/g, ""));
         const name = nameCol >= 0 ? cols[nameCol] || "" : "";
@@ -366,21 +362,14 @@ function CsvImporter() {
         const lumaId = lumaCol >= 0 ? cols[lumaCol] || "" : "";
         const checkedInValue = checkedInCol >= 0 ? cols[checkedInCol] || "" : "";
 
-        if (!name && !email) { skipped++; continue; }
+        if (!name && !email) continue;
 
         const displayName = name || email.split("@")[0] || "Unknown";
-
-        // Check for duplicates
-        if (email) {
-          const { data: existing } = await supabase.from("participants").select("id").eq("email", email).limit(1);
-          if (existing && existing.length > 0) { skipped++; continue; }
-        }
-
         const isCheckedIn = checkedInValue
           ? ["yes", "true", "1", "checked in", "approved"].includes(checkedInValue.toLowerCase())
           : false;
 
-        const { error } = await supabase.from("participants").insert({
+        rows.push({
           name: displayName,
           avatar_initials: generateInitials(displayName),
           avatar_color: generateColor(),
@@ -391,27 +380,30 @@ function CsvImporter() {
           luma_guest_id: lumaId || null,
           checked_in: isCheckedIn,
         });
-
-        if (!error) imported++;
-        else skipped++;
       }
 
-      // Update settings
-      if (imported > 0) {
-        const { data: settings } = await supabase.from("hackathon_settings").select("*").limit(1).single();
-        if (settings) {
-          await supabase.from("hackathon_settings").update({
-            active_participants: (settings.active_participants || 0) + imported,
-            is_using_demo_data: false,
-          }).eq("id", settings.id);
-        }
+      if (rows.length === 0) {
+        toast({ title: "No valid rows found in CSV", variant: "destructive" });
+        setIsImporting(false);
+        return;
       }
+
+      // Fetch current settings count (read — stays client-side)
+      const { data: settings } = await supabase
+        .from("hackathon_settings").select("id, active_participants").limit(1).single();
+
+      // Dedup + insert + settings update all happen server-side via service_role
+      const result = await adminApi("participants.import", {
+        rows,
+        settingsId: settings?.id ?? null,
+        currentCount: settings?.active_participants ?? 0,
+      });
 
       queryClient.invalidateQueries({ queryKey: ["admin-participants"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast({
         title: "CSV import complete",
-        description: `Imported ${imported} builders, ${skipped} already existed.`,
+        description: `Imported ${result.imported} builders, ${result.skipped} already existed.`,
       });
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -536,8 +528,7 @@ function BuildersTab() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      const { error } = await supabase.from("participants").delete().eq("id", id);
-      if (error) throw error;
+      await adminApi("participants.delete", { id });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-participants"] });
@@ -548,11 +539,7 @@ function BuildersTab() {
 
   const spotlightMutation = useMutation({
     mutationFn: async (id: number) => {
-      // Remove existing spotlight
-      await supabase.from("participants").update({ is_spotlight: false }).eq("is_spotlight", true);
-      // Set new spotlight
-      const { error } = await supabase.from("participants").update({ is_spotlight: true }).eq("id", id);
-      if (error) throw error;
+      await adminApi("participants.spotlight", { id });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-participants"] });
@@ -563,11 +550,8 @@ function BuildersTab() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data, currentName, currentBuildStatus }: { id: number; data: any; currentName: string; currentBuildStatus: string | null }) => {
-      // Auto-create activity if buildStatus changed
-      if (
-        data.build_status &&
-        data.build_status !== currentBuildStatus
-      ) {
+      let autoActivity = null;
+      if (data.build_status && data.build_status !== currentBuildStatus) {
         const appName = data.project_name || null;
         if (appName) {
           const emojiMap: Record<string, string> = {
@@ -575,17 +559,14 @@ function BuildersTab() {
             "is building": "🔨",
             "is testing": "🧪",
           };
-          const emoji = emojiMap[data.build_status] || "✨";
-          await supabase.from("activities").insert({
+          autoActivity = {
             participant_name: currentName,
             action: `${data.build_status} ${appName}`,
-            emoji,
-          });
+            emoji: emojiMap[data.build_status] || "✨",
+          };
         }
       }
-
-      const { error } = await supabase.from("participants").update(data).eq("id", id);
-      if (error) throw error;
+      await adminApi("participants.update_with_activity", { id, data, autoActivity });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-participants"] });
@@ -600,8 +581,7 @@ function BuildersTab() {
 
   const postActivityMutation = useMutation({
     mutationFn: async (data: { participant_name: string; action: string; emoji: string }) => {
-      const { error } = await supabase.from("activities").insert(data);
-      if (error) throw error;
+      await adminApi("activities.insert", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-activities"] });
@@ -615,8 +595,7 @@ function BuildersTab() {
 
   const deleteActivityMutation = useMutation({
     mutationFn: async (id: number) => {
-      const { error } = await supabase.from("activities").delete().eq("id", id);
-      if (error) throw error;
+      await adminApi("activities.delete", { id });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-activities"] });
