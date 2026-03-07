@@ -581,8 +581,10 @@ function BuildersTab() {
       toast({ title: "Builder updated" });
       setEditingId(null);
     },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
+    onError: (err: Error) => {
+      console.error("Builder update error:", err);
+      toast({ title: "Error", description: adminFriendlyError(err), variant: "destructive" });
+    },
   });
 
   const postActivityMutation = useMutation({
