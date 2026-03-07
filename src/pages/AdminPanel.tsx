@@ -102,8 +102,10 @@ function SettingsTab() {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       toast({ title: "Settings saved" });
     },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
+    onError: (err: Error) => {
+      console.error("Settings update error:", err);
+      toast({ title: "Error", description: adminFriendlyError(err), variant: "destructive" });
+    },
   });
 
   const handleStartChange = (value: string) => {
