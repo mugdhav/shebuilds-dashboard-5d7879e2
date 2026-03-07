@@ -13,6 +13,7 @@ import {
   CheckCircle2, ArrowLeft, AlertCircle
 } from "lucide-react";
 import type { Topic } from "@/types/hackathon";
+import { userFriendlyError } from "@/lib/errorMessages";
 
 interface FieldErrors {
   fullName?: string;
