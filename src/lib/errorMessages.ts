@@ -36,7 +36,7 @@ const ADMIN_PATTERNS: ErrorPattern[] = [
     message: "You don't have permission to perform this action. Try logging in again.",
   },
   {
-    test: (m) => m.includes("JWT") || m.includes("token"),
+    test: (m) => m.includes("jwt") || m.includes("access_token") || m.includes("not authenticated"),
     message: "Your session has expired. Please reload the page and log in again.",
   },
   {

@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://fhyuvjznkaklefkxvgse.supabase.co";
 const EDGE_URL = `${SUPABASE_URL}/functions/v1/admin-mutations`;
 
 export async function adminApi(operation: string, payload: unknown): Promise<any> {
@@ -16,7 +16,13 @@ export async function adminApi(operation: string, payload: unknown): Promise<any
     body: JSON.stringify({ operation, payload }),
   });
 
-  const json = await res.json();
+  let json: any;
+  try {
+    json = await res.json();
+  } catch {
+    throw new Error(`Admin request failed (${res.status}): unexpected response format`);
+  }
+
   if (!res.ok) throw new Error(json.error ?? `Admin request failed (${res.status})`);
   return json.data;
 }
