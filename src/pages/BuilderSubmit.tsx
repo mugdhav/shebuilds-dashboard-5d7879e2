@@ -112,9 +112,10 @@ export default function SubmitPage() {
       toast({ title: "Submission received!" });
     },
     onError: (err: Error) => {
+      console.error("Submission error:", err);
       toast({
         title: "Submission failed",
-        description: err.message,
+        description: userFriendlyError(err),
         variant: "destructive",
       });
     },
