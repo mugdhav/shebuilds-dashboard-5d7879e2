@@ -23,7 +23,7 @@ const steps = [
           </a>{" "}
           and complete the survey
         </li>
-        <li>Select <span className="text-white/90 font-medium">72. Pune, India (mugdhaAI)</span></li>
+        <li>Select <span className="text-white/90 font-medium">Pune, India</span></li>
       </ul>
     ),
   },
