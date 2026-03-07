@@ -409,7 +409,8 @@ function CsvImporter() {
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err: any) {
-      toast({ title: "Import failed", description: err.message, variant: "destructive" });
+      console.error("CSV import error:", err);
+      toast({ title: "Import failed", description: adminFriendlyError(err), variant: "destructive" });
     }
 
     setIsImporting(false);
