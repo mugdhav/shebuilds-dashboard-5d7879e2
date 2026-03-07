@@ -8,6 +8,7 @@ import AdminPanel from "./pages/AdminPanel";
 import BuilderSubmit from "./pages/BuilderSubmit";
 import Prep from "./pages/Prep";
 import NotFound from "./pages/NotFound";
+import { AdminAuthGuard } from "./components/AdminAuth";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +20,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin" element={<AdminAuthGuard><AdminPanel /></AdminAuthGuard>} />
           <Route path="/submit" element={<BuilderSubmit />} />
           <Route path="/prep" element={<Prep />} />
           <Route path="*" element={<NotFound />} />
