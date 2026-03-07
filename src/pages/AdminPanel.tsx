@@ -91,7 +91,7 @@ function SettingsTab() {
     },
   });
 
-  const [timeForm, setTimeForm] = useState({ startTime: "", endTime: "" });
+  const [timeForm, setTimeForm] = useState({ startTime: "2026-03-08T11:00", endTime: "2026-03-08T14:00" });
 
   const updateTimeMutation = useMutation({
     mutationFn: async (payload: { start_time?: string; end_time?: string }) => {
