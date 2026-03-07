@@ -19,12 +19,19 @@ export function AdminAuthGuard({ children }: Props) {
   const [error, setError] = useState("");
   const [signing, setSigning] = useState(false);
 
-  // Restore existing Supabase session on mount
+  // Track session reactively — handles expiry, sign-out, and page reload
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setAuthed(!!session);
       setLoading(false);
     });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAuthed(!!session);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   if (loading) return null;
