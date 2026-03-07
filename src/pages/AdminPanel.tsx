@@ -16,6 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import type { Participant, Activity, Topic, HackathonSettings } from "@/types/hackathon";
 import { adminApi } from "@/lib/adminApi";
+import { adminFriendlyError } from "@/lib/errorMessages";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
