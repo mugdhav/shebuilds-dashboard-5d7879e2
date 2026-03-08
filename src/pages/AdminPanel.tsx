@@ -370,7 +370,7 @@ function CsvImporter() {
           ticket_number: null,
           email: email || null,
           luma_guest_id: null,
-          checked_in: false,
+          checked_in: true,
         });
       }
 
