@@ -343,13 +343,6 @@ function CsvImporter() {
       const emailCol = headers.findIndex((h) =>
         ["email", "email address", "email_address", "guest email"].includes(h)
       );
-      const ticketCol = headers.findIndex((h) =>
-        ["ticket", "ticket number", "ticket_number", "ticket_key", "ticket id", "ticket_id", "order number", "order_number"].includes(h)
-      );
-      const lumaCol = headers.findIndex((h) => ["api_id", "guest_id", "api id"].includes(h));
-      const checkedInCol = headers.findIndex((h) =>
-        ["checked in", "checked_in", "check-in", "check in", "checked_in_at", "checked in at", "approval status", "has_joined_event", "has joined event"].includes(h)
-      );
 
       if (nameCol === -1 && emailCol === -1) {
         toast({ title: "CSV must contain Name or Email column", variant: "destructive" });
@@ -363,27 +356,21 @@ function CsvImporter() {
         const cols = lines[i].split(",").map((c) => c.trim().replace(/^"|"$/g, ""));
         const name = nameCol >= 0 ? cols[nameCol] || "" : "";
         const email = emailCol >= 0 ? cols[emailCol] || "" : "";
-        const ticket = ticketCol >= 0 ? cols[ticketCol] || "" : "";
-        const lumaId = lumaCol >= 0 ? cols[lumaCol] || "" : "";
-        const checkedInValue = checkedInCol >= 0 ? cols[checkedInCol] || "" : "";
 
         if (!name && !email) continue;
 
         const displayName = name || email.split("@")[0] || "Unknown";
-        const isCheckedIn = checkedInValue
-          ? ["yes", "true", "1", "checked in", "approved"].includes(checkedInValue.toLowerCase())
-          : false;
 
         rows.push({
           name: displayName,
           avatar_initials: generateInitials(displayName),
           avatar_color: generateColor(),
-          status: isCheckedIn ? "checked-in" : "active",
+          status: "active",
           is_spotlight: false,
-          ticket_number: ticket || lumaId || null,
+          ticket_number: null,
           email: email || null,
-          luma_guest_id: lumaId || null,
-          checked_in: isCheckedIn,
+          luma_guest_id: null,
+          checked_in: false,
         });
       }
 
