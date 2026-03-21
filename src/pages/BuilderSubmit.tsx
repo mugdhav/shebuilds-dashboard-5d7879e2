@@ -219,7 +219,7 @@ export default function SubmitPage() {
             onClick={() => window.open('/Help.html', '_blank')}
             className="w-10 h-10 flex items-center justify-center rounded-md text-white/60 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium"
           >
-            ?
+            Help
           </button>
         </div>
 
