@@ -24,20 +24,11 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          cat > dist/README.md << 'EOF'
-          ---
-          title: Hackathon Dashboard
-          emoji: 🚀
-          colorFrom: purple
-          colorTo: blue
-          sdk: static
-          pinned: false
-          ---
-          EOF
-          cd dist
-          git init
+          git clone https://mugdhav:${HF_TOKEN}@huggingface.co/spaces/mugdhav/hackathon-dashboard hf-space
+          cp -r dist/. hf-space/
+          cd hf-space
           git config user.email "deploy@shebuilds"
           git config user.name "deploy"
           git add .
-          git commit -m "deploy"
-          git push --force https://user:${HF_TOKEN}@huggingface.co/spaces/mugdhav/hackathon-dashboard main
+          git diff --cached --quiet || git commit -m "deploy"
+          git push
