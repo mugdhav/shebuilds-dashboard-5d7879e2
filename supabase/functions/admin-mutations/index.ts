@@ -38,6 +38,12 @@ Deno.serve(async (req) => {
     return json({ error: "Unauthorized" }, 401);
   }
 
+  const ADMIN_EMAIL = Deno.env.get("ADMIN_EMAIL") ?? "admin@shebuilds.com";
+  if (user.email !== ADMIN_EMAIL) {
+    console.error(`AUTHZ: rejected non-admin user ${user.email}`);
+    return json({ error: "Forbidden" }, 403);
+  }
+
   // ── Parse body ───────────────────────────────────────────────────────────────
   let operation: string, payload: any;
   try {
