@@ -29,7 +29,15 @@ function copyDir(src, dest) {
 copyDir(distDir, hfDir);
 
 // Commit and push to hf remote
+const token = process.env.HF_TOKEN;
+if (!token) {
+  console.error("Error: HF_TOKEN environment variable is not set.");
+  console.error("Run: set HF_TOKEN=<your-huggingface-write-token>");
+  process.exit(1);
+}
+const remoteUrl = `https://mugdhav:${token}@huggingface.co/spaces/mugdhav/hackathon-dashboard`;
+
 const git = (cmd) => execSync(`git ${cmd}`, { cwd: hfDir, stdio: "inherit" });
 git("add .");
 git('commit --allow-empty -m "deploy"');
-git("push hf HEAD:main --force");
+git(`push ${remoteUrl} HEAD:main --force`);
