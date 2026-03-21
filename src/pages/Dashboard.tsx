@@ -145,20 +145,36 @@ export default function Dashboard() {
             <p className="text-white text-xs font-bold mt-1">{currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false })} IST</p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => window.open('/Help.html', '_blank')}
-              className="bg-black/30 border border-white/20 rounded-lg px-3 py-2.5 backdrop-blur-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium"
-            >
-              ?
-            </button>
-            <div className="bg-black/30 border border-white/20 rounded-lg px-4 py-2.5 backdrop-blur-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-sm text-white font-medium">
-                  Live - Updated {formatTime(lastUpdated)}
-                </span>
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => window.open('/Help.html', '_blank')}
+                className="bg-black/30 border border-white/20 rounded-lg px-3 py-2.5 backdrop-blur-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium"
+              >
+                Help
+              </button>
+              <div className="bg-black/30 border border-white/20 rounded-lg px-4 py-2.5 backdrop-blur-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                  <span className="text-sm text-white font-medium">
+                    Live - Updated {formatTime(lastUpdated)}
+                  </span>
+                </div>
               </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => window.open('/admin', '_blank')}
+                className="bg-black/30 border border-white/20 rounded-lg px-3 py-2 backdrop-blur-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors text-xs font-medium"
+              >
+                Administrator
+              </button>
+              <button
+                onClick={() => window.open('/submit', '_blank')}
+                className="bg-black/30 border border-white/20 rounded-lg px-3 py-2 backdrop-blur-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors text-xs font-medium"
+              >
+                Builder
+              </button>
             </div>
           </div>
         </motion.header>
