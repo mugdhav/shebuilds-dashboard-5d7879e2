@@ -24,6 +24,16 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          cat > dist/README.md << 'EOF'
+          ---
+          title: Hackathon Dashboard
+          emoji: 🚀
+          colorFrom: purple
+          colorTo: blue
+          sdk: static
+          pinned: false
+          ---
+          EOF
           cd dist
           git init
           git config user.email "deploy@shebuilds"
