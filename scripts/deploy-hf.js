@@ -20,6 +20,7 @@ for (const entry of fs.readdirSync(hfDir)) {
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    if (entry.name === ".git") continue;
     const s = path.join(src, entry.name);
     const d = path.join(dest, entry.name);
     entry.isDirectory() ? copyDir(s, d) : fs.copyFileSync(s, d);
