@@ -165,13 +165,13 @@ export default function Dashboard() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => window.open('/admin', '_blank')}
-                className="bg-blue-600/40 border border-blue-400/30 rounded-lg px-3 py-2 backdrop-blur-sm text-blue-100 hover:text-white hover:bg-blue-500/50 transition-colors text-xs font-medium"
+                className="bg-[#5271FF]/40 border border-[#5271FF]/40 rounded-lg px-3 py-2 backdrop-blur-sm text-blue-100 hover:text-white hover:bg-[#5271FF]/60 transition-colors text-xs font-medium"
               >
                 Administrator
               </button>
               <button
                 onClick={() => window.open('/submit', '_blank')}
-                className="bg-blue-600/40 border border-blue-400/30 rounded-lg px-3 py-2 backdrop-blur-sm text-blue-100 hover:text-white hover:bg-blue-500/50 transition-colors text-xs font-medium"
+                className="bg-[#5271FF]/40 border border-[#5271FF]/40 rounded-lg px-3 py-2 backdrop-blur-sm text-blue-100 hover:text-white hover:bg-[#5271FF]/60 transition-colors text-xs font-medium"
               >
                 Builder
               </button>
