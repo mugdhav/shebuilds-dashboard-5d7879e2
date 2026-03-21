@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "deploy:hf": "npm run build && git -C dist init && git -C dist add . && git -C dist commit -m deploy && git -C dist push --force $(git remote get-url hf) HEAD:main"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
