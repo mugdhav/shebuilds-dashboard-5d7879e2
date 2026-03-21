@@ -20,12 +20,23 @@ Deno.serve(async (req) => {
 
   // ── Auth: validate Supabase JWT ──────────────────────────────────────────────
   const token = (req.headers.get("Authorization") ?? "").replace("Bearer ", "");
-  if (!token) return json({ error: "Unauthorized" }, 401);
+  if (!token) {
+    console.error("AUTH: no token provided");
+    return json({ error: "Unauthorized" }, 401);
+  }
+
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    console.error("CONFIG: missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY env vars");
+    return json({ error: "Server misconfiguration" }, 500);
+  }
 
   const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
   const { data: { user }, error: authError } = await db.auth.getUser(token);
-  if (authError || !user) return json({ error: "Unauthorized" }, 401);
+  if (authError || !user) {
+    console.error("AUTH: getUser failed", authError?.message);
+    return json({ error: "Unauthorized" }, 401);
+  }
 
   // ── Parse body ───────────────────────────────────────────────────────────────
   let operation: string, payload: any;
@@ -34,6 +45,8 @@ Deno.serve(async (req) => {
   } catch {
     return json({ error: "Invalid JSON" }, 400);
   }
+
+  console.log(`OP: ${operation} by ${user.email}`);
 
   let result: any = null;
 
@@ -139,6 +152,7 @@ Deno.serve(async (req) => {
 
     return json({ ok: true, data: result });
   } catch (err: any) {
+    console.error(`OP ERROR [${operation}]:`, err.message);
     return json({ error: err.message }, 500);
   }
 });
