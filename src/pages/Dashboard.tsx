@@ -10,6 +10,7 @@ import { BuilderSpotlight } from "@/components/hackathon/BuilderSpotlight";
 import { LiveActivity } from "@/components/hackathon/LiveActivity";
 import { TopicCloud } from "@/components/hackathon/TopicCloud";
 import type { Participant, Activity, Topic, HackathonSettings } from "@/types/hackathon";
+import { HelpButton } from "@/components/HelpButton";
 
 function useCurrentTime() {
   const [time, setTime] = useState(() => new Date());
@@ -147,12 +148,10 @@ export default function Dashboard() {
 
           <div className="flex flex-col items-end gap-2">
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => window.open('/Help.html', '_blank')}
-                className="bg-black/30 border border-white/20 rounded-lg px-3 py-2.5 backdrop-blur-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium"
-              >
-                Help
-              </button>
+              <HelpButton
+                defaultTab="dashboard"
+                className="bg-black/30 border border-white/20 rounded-lg px-3 py-2.5 backdrop-blur-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium flex items-center gap-1.5"
+              />
               <div className="bg-black/30 border border-white/20 rounded-lg px-4 py-2.5 backdrop-blur-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />

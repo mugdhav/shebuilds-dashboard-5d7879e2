@@ -12,6 +12,8 @@ import {
   User, Mail, Lightbulb, Link2, Send, AppWindow,
   CheckCircle2, ArrowLeft, AlertCircle
 } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { HelpButton } from "@/components/HelpButton";
 import type { Topic } from "@/types/hackathon";
 import { userFriendlyError } from "@/lib/errorMessages";
 
@@ -215,12 +217,7 @@ export default function SubmitPage() {
             </Button>
           </Link>
           <GlowLogo />
-          <button
-            onClick={() => window.open('/Help.html', '_blank')}
-            className="w-10 h-10 flex items-center justify-center rounded-md text-white/60 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium"
-          >
-            Help
-          </button>
+          <HelpButton defaultTab="submit" />
         </div>
 
         <Card className="bg-black/30 border-white/20 backdrop-blur-md">
@@ -234,7 +231,10 @@ export default function SubmitPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="fullName" className="text-white/70 text-xs flex items-center gap-1.5 mb-1.5">
-                  <User className="w-3.5 h-3.5" />
+                  <Tooltip>
+                    <TooltipTrigger asChild><User className="w-3.5 h-3.5 cursor-help" /></TooltipTrigger>
+                    <TooltipContent>Your name as it will appear on the dashboard (min 2 characters)</TooltipContent>
+                  </Tooltip>
                   Full Name *
                 </Label>
                 <Input
@@ -257,7 +257,10 @@ export default function SubmitPage() {
 
               <div>
                 <Label htmlFor="email" className="text-white/70 text-xs flex items-center gap-1.5 mb-1.5">
-                  <Mail className="w-3.5 h-3.5" />
+                  <Tooltip>
+                    <TooltipTrigger asChild><Mail className="w-3.5 h-3.5 cursor-help" /></TooltipTrigger>
+                    <TooltipContent>Used to identify your submission — one submission per email</TooltipContent>
+                  </Tooltip>
                   Email *
                 </Label>
                 <Input
@@ -281,7 +284,10 @@ export default function SubmitPage() {
 
               <div>
                 <Label htmlFor="appName" className="text-white/70 text-xs flex items-center gap-1.5 mb-1.5">
-                  <AppWindow className="w-3.5 h-3.5" />
+                  <Tooltip>
+                    <TooltipTrigger asChild><AppWindow className="w-3.5 h-3.5 cursor-help" /></TooltipTrigger>
+                    <TooltipContent>A short name for your project, max 25 characters</TooltipContent>
+                  </Tooltip>
                   App Name * <span className="text-white/30 ml-auto">{form.appName.length}/25</span>
                 </Label>
                 <Input
@@ -305,7 +311,10 @@ export default function SubmitPage() {
 
               <div>
                 <Label htmlFor="appTopic" className="text-white/70 text-xs flex items-center gap-1.5 mb-1.5">
-                  <Lightbulb className="w-3.5 h-3.5" />
+                  <Tooltip>
+                    <TooltipTrigger asChild><Lightbulb className="w-3.5 h-3.5 cursor-help" /></TooltipTrigger>
+                    <TooltipContent>Optional tag shown in the topic cloud — max 25 characters</TooltipContent>
+                  </Tooltip>
                   App Topic <span className="text-white/30 ml-auto">{form.appTopic.length}/25</span>
                 </Label>
                 <div className="relative">
@@ -362,7 +371,10 @@ export default function SubmitPage() {
 
               <div>
                 <Label htmlFor="appLink" className="text-white/70 text-xs flex items-center gap-1.5 mb-1.5">
-                  <Link2 className="w-3.5 h-3.5" />
+                  <Tooltip>
+                    <TooltipTrigger asChild><Link2 className="w-3.5 h-3.5 cursor-help" /></TooltipTrigger>
+                    <TooltipContent>Optional URL to your live app — must start with https://</TooltipContent>
+                  </Tooltip>
                   App Link
                 </Label>
                 <Input

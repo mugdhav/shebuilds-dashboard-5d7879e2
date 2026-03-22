@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Wifi, ClipboardList, UserPlus, LogIn, FileText, Rocket, HelpCircle } from "lucide-react";
+import { Wifi, ClipboardList, UserPlus, LogIn, FileText, Rocket } from "lucide-react";
+import { HelpButton } from "@/components/HelpButton";
 
 const steps = [
   {
@@ -92,13 +93,7 @@ export default function Prep() {
         {/* Top bar: logo + help */}
         <div className="flex items-center justify-between mb-4">
           <img src="/shebuilds-logo.png" alt="SheBuilds" className="h-10 ml-1" />
-          <button
-            onClick={() => window.open("/Help.html", "_blank")}
-            className="flex items-center gap-1.5 text-white/60 hover:text-white/90 transition-colors text-sm"
-          >
-            <HelpCircle size={18} />
-            Help
-          </button>
+          <HelpButton defaultTab="overview" />
         </div>
 
         {/* Hero */}

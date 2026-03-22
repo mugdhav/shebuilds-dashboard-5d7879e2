@@ -17,6 +17,8 @@ import { Link } from "react-router-dom";
 import type { Participant, Activity, Topic, HackathonSettings } from "@/types/hackathon";
 import { adminApi } from "@/lib/adminApi";
 import { adminFriendlyError } from "@/lib/errorMessages";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { HelpButton } from "@/components/HelpButton";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -66,14 +68,19 @@ const scrollCls =
 
 function DeleteBtn({ onClick, testId }: { onClick: () => void; testId?: string }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      data-testid={testId}
-      className="p-1.5 rounded-md text-white/25 hover:text-rose-400 hover:bg-white/10 transition-colors"
-    >
-      <Trash2 className="w-3.5 h-3.5" />
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          onClick={onClick}
+          data-testid={testId}
+          className="p-1.5 rounded-md text-white/25 hover:text-rose-400 hover:bg-white/10 transition-colors"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>Delete permanently</TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -198,13 +205,18 @@ function SettingsTab() {
           <form onSubmit={handleTimeSubmit} className="space-y-3">
             <div className="flex items-end justify-between mb-1">
               <span className="text-xs text-white/60">Hackathon window</span>
-              <button
-                type="button"
-                onClick={handleSetNow}
-                className="text-xs text-white/50 hover:text-white/90 transition-colors"
-              >
-                Set to Now (+3h end)
-              </button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={handleSetNow}
+                    className="text-xs text-white/50 hover:text-white/90 transition-colors"
+                  >
+                    Set to Now (+3h end)
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Set start time to right now and end time to 3 hours later</TooltipContent>
+              </Tooltip>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
@@ -262,15 +274,20 @@ function SettingsTab() {
               onChange={(e) => setTopicForm({ ...topicForm, name: e.target.value })}
               className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/40"
             />
-            <Input
-              type="number"
-              min="1"
-              max="10"
-              value={topicForm.weight}
-              onChange={(e) => setTopicForm({ ...topicForm, weight: e.target.value })}
-              className="w-16 text-center bg-white/10 border-white/20 text-white"
-              title="Weight"
-            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={topicForm.weight}
+                  onChange={(e) => setTopicForm({ ...topicForm, weight: e.target.value })}
+                  className="w-16 text-center bg-white/10 border-white/20 text-white cursor-help"
+                  title="Weight"
+                />
+              </TooltipTrigger>
+              <TooltipContent>Controls word size in the topic cloud — higher weight = larger word (1–10)</TooltipContent>
+            </Tooltip>
             <Button type="submit" disabled={addTopicMutation.isPending}>
               <Plus className="w-4 h-4" />
             </Button>
@@ -710,15 +727,22 @@ function BuildersTab() {
                     >
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => spotlightMutation.mutate(p.id)}
-                      className="p-1.5 rounded-md text-white/40 hover:text-yellow-400 hover:bg-white/10 transition-colors"
-                    >
-                      {p.is_spotlight
-                        ? <StarOff className="w-3.5 h-3.5 text-yellow-400" />
-                        : <Star className="w-3.5 h-3.5" />}
-                    </button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => spotlightMutation.mutate(p.id)}
+                          className="p-1.5 rounded-md text-white/40 hover:text-yellow-400 hover:bg-white/10 transition-colors"
+                        >
+                          {p.is_spotlight
+                            ? <StarOff className="w-3.5 h-3.5 text-yellow-400" />
+                            : <Star className="w-3.5 h-3.5" />}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {p.is_spotlight ? "Remove from spotlight" : "Feature this builder in the Spotlight panel on the live dashboard"}
+                      </TooltipContent>
+                    </Tooltip>
                     <DeleteBtn onClick={() => deleteMutation.mutate(p.id)} />
                   </div>
                 </div>
@@ -814,16 +838,21 @@ function BuildersTab() {
                             </button>
                           ))}
                         </div>
-                        <Button
-                          type="button"
-                          size="sm"
-                          className="w-full"
-                          onClick={() => handlePostActivity(p.name)}
-                          disabled={postActivityMutation.isPending || !activityForm.action.trim()}
-                        >
-                          <Plus className="w-3.5 h-3.5 mr-1" />
-                          {postActivityMutation.isPending ? "Posting…" : "Post Activity"}
-                        </Button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="w-full"
+                              onClick={() => handlePostActivity(p.name)}
+                              disabled={postActivityMutation.isPending || !activityForm.action.trim()}
+                            >
+                              <Plus className="w-3.5 h-3.5 mr-1" />
+                              {postActivityMutation.isPending ? "Posting…" : "Post Activity"}
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Add a custom update to the live activity feed for this builder</TooltipContent>
+                        </Tooltip>
                       </div>
                     </div>
                   </div>
@@ -896,12 +925,10 @@ export default function AdminPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => window.open('/Help.html', '_blank')}
-              className="cursor-pointer bg-white/15 text-white hover:bg-white/25 border border-white/20 rounded-md px-2.5 py-0.5 text-xs font-medium"
-            >
-              Help
-            </button>
+            <HelpButton
+              defaultTab="admin"
+              className="flex items-center gap-1.5 bg-white/15 text-white hover:bg-white/25 border border-white/20 rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
+            />
             <Link to="/">
               <Badge
                 variant="secondary"
