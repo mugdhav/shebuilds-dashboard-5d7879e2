@@ -232,7 +232,7 @@ export default function SubmitPage() {
               <div>
                 <Label htmlFor="fullName" className="text-white/70 text-xs flex items-center gap-1.5 mb-1.5">
                   <Tooltip>
-                    <TooltipTrigger asChild><User className="w-3.5 h-3.5 cursor-help" /></TooltipTrigger>
+                    <TooltipTrigger asChild><span className="inline-flex cursor-help"><User className="w-3.5 h-3.5" /></span></TooltipTrigger>
                     <TooltipContent>Your name as it will appear on the dashboard (min 2 characters)</TooltipContent>
                   </Tooltip>
                   Full Name *
@@ -258,7 +258,7 @@ export default function SubmitPage() {
               <div>
                 <Label htmlFor="email" className="text-white/70 text-xs flex items-center gap-1.5 mb-1.5">
                   <Tooltip>
-                    <TooltipTrigger asChild><Mail className="w-3.5 h-3.5 cursor-help" /></TooltipTrigger>
+                    <TooltipTrigger asChild><span className="inline-flex cursor-help"><Mail className="w-3.5 h-3.5" /></span></TooltipTrigger>
                     <TooltipContent>Used to identify your submission — one submission per email</TooltipContent>
                   </Tooltip>
                   Email *
@@ -285,7 +285,7 @@ export default function SubmitPage() {
               <div>
                 <Label htmlFor="appName" className="text-white/70 text-xs flex items-center gap-1.5 mb-1.5">
                   <Tooltip>
-                    <TooltipTrigger asChild><AppWindow className="w-3.5 h-3.5 cursor-help" /></TooltipTrigger>
+                    <TooltipTrigger asChild><span className="inline-flex cursor-help"><AppWindow className="w-3.5 h-3.5" /></span></TooltipTrigger>
                     <TooltipContent>A short name for your project, max 25 characters</TooltipContent>
                   </Tooltip>
                   App Name * <span className="text-white/30 ml-auto">{form.appName.length}/25</span>
@@ -312,7 +312,7 @@ export default function SubmitPage() {
               <div>
                 <Label htmlFor="appTopic" className="text-white/70 text-xs flex items-center gap-1.5 mb-1.5">
                   <Tooltip>
-                    <TooltipTrigger asChild><Lightbulb className="w-3.5 h-3.5 cursor-help" /></TooltipTrigger>
+                    <TooltipTrigger asChild><span className="inline-flex cursor-help"><Lightbulb className="w-3.5 h-3.5" /></span></TooltipTrigger>
                     <TooltipContent>Optional tag shown in the topic cloud — max 25 characters</TooltipContent>
                   </Tooltip>
                   App Topic <span className="text-white/30 ml-auto">{form.appTopic.length}/25</span>
@@ -372,7 +372,7 @@ export default function SubmitPage() {
               <div>
                 <Label htmlFor="appLink" className="text-white/70 text-xs flex items-center gap-1.5 mb-1.5">
                   <Tooltip>
-                    <TooltipTrigger asChild><Link2 className="w-3.5 h-3.5 cursor-help" /></TooltipTrigger>
+                    <TooltipTrigger asChild><span className="inline-flex cursor-help"><Link2 className="w-3.5 h-3.5" /></span></TooltipTrigger>
                     <TooltipContent>Optional URL to your live app — must start with https://</TooltipContent>
                   </Tooltip>
                   App Link
