@@ -20,22 +20,6 @@ import { adminFriendlyError } from "@/lib/errorMessages";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { HelpButton } from "@/components/HelpButton";
 
-// ─── helpers ────────────────────────────────────────────────────────────────
-
-function toDateTimeLocal(date: Date | string | null | undefined): string {
-  if (!date) return "";
-  const d = new Date(date as string);
-  if (isNaN(d.getTime())) return "";
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
-function formatDisplayTime(date: Date | string | null | undefined): string {
-  if (!date) return "—";
-  const d = new Date(date as string);
-  if (isNaN(d.getTime())) return "—";
-  return d.toLocaleString("en-IN", { dateStyle: "short", timeStyle: "short" });
-}
 
 const BUILD_STATUS_OPTIONS = [
   { value: "", label: "— no status —" },
@@ -98,7 +82,19 @@ function SettingsTab() {
     },
   });
 
-  const [timeForm, setTimeForm] = useState({ startTime: "2026-03-08T11:00", endTime: "2026-03-08T14:00" });
+  const [timeForm, setTimeForm] = useState({ date: "", startTime: "", endTime: "" });
+
+  useEffect(() => {
+    if (!settings) return;
+    const s = new Date(settings.start_time);
+    const e = new Date(settings.end_time);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    setTimeForm({
+      date: `${s.getFullYear()}-${pad(s.getMonth() + 1)}-${pad(s.getDate())}`,
+      startTime: `${pad(s.getHours())}:${pad(s.getMinutes())}`,
+      endTime: `${pad(e.getHours())}:${pad(e.getMinutes())}`,
+    });
+  }, [settings]);
 
   const updateTimeMutation = useMutation({
     mutationFn: async (payload: { start_time?: string; end_time?: string }) => {
@@ -115,31 +111,24 @@ function SettingsTab() {
     },
   });
 
-  const handleStartChange = (value: string) => {
-    const updated = { ...timeForm, startTime: value };
-    if (value && !timeForm.endTime) {
-      const s = new Date(value);
-      if (!isNaN(s.getTime())) {
-        updated.endTime = toDateTimeLocal(new Date(s.getTime() + 3 * 60 * 60 * 1000));
-      }
-    }
-    setTimeForm(updated);
-  };
-
   const handleSetNow = () => {
     const now = new Date();
+    const end = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+    const pad = (n: number) => String(n).padStart(2, "0");
     setTimeForm({
-      startTime: toDateTimeLocal(now),
-      endTime: toDateTimeLocal(new Date(now.getTime() + 3 * 60 * 60 * 1000)),
+      date: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`,
+      startTime: `${pad(now.getHours())}:${pad(now.getMinutes())}`,
+      endTime: `${pad(end.getHours())}:${pad(end.getMinutes())}`,
     });
   };
 
   const handleTimeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const payload: any = {};
-    if (timeForm.startTime) payload.start_time = new Date(timeForm.startTime).toISOString();
-    if (timeForm.endTime) payload.end_time = new Date(timeForm.endTime).toISOString();
-    updateTimeMutation.mutate(payload);
+    if (!timeForm.date || !timeForm.startTime || !timeForm.endTime) return;
+    updateTimeMutation.mutate({
+      start_time: new Date(`${timeForm.date}T${timeForm.startTime}`).toISOString(),
+      end_time: new Date(`${timeForm.date}T${timeForm.endTime}`).toISOString(),
+    });
   };
 
   // ── Trending topics ───────────────────────────────────────────────────────
@@ -191,17 +180,6 @@ function SettingsTab() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 grid grid-cols-2 gap-3 text-xs">
-            <div className="rounded-md bg-white/10 border border-white/10 p-2.5">
-              <div className="text-white/50 mb-0.5">Current Start</div>
-              <div className="font-medium">{formatDisplayTime(settings?.start_time)}</div>
-            </div>
-            <div className="rounded-md bg-white/10 border border-white/10 p-2.5">
-              <div className="text-white/50 mb-0.5">Current End</div>
-              <div className="font-medium">{formatDisplayTime(settings?.end_time)}</div>
-            </div>
-          </div>
-
           <form onSubmit={handleTimeSubmit} className="space-y-3">
             <div className="flex items-end justify-between mb-1">
               <span className="text-xs text-white/60">Hackathon window</span>
@@ -215,17 +193,27 @@ function SettingsTab() {
                     Set to Now (+3h end)
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Set start time to right now and end time to 3 hours later</TooltipContent>
+                <TooltipContent>Set date and start time to right now, end time to 3 hours later</TooltipContent>
               </Tooltip>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <Label htmlFor="hackDate" className="text-xs">Date</Label>
+                <Input
+                  id="hackDate"
+                  type="date"
+                  value={timeForm.date}
+                  onChange={(e) => setTimeForm({ ...timeForm, date: e.target.value })}
+                  className="bg-white/10 text-white border-white/20 [color-scheme:dark] text-xs px-2"
+                />
+              </div>
               <div>
                 <Label htmlFor="startTime" className="text-xs">Start</Label>
                 <Input
                   id="startTime"
-                  type="datetime-local"
+                  type="time"
                   value={timeForm.startTime}
-                  onChange={(e) => handleStartChange(e.target.value)}
+                  onChange={(e) => setTimeForm({ ...timeForm, startTime: e.target.value })}
                   className="bg-white/10 text-white border-white/20 [color-scheme:dark] text-xs px-2"
                 />
               </div>
@@ -233,7 +221,7 @@ function SettingsTab() {
                 <Label htmlFor="endTime" className="text-xs">End</Label>
                 <Input
                   id="endTime"
-                  type="datetime-local"
+                  type="time"
                   value={timeForm.endTime}
                   onChange={(e) => setTimeForm({ ...timeForm, endTime: e.target.value })}
                   className="bg-white/10 text-white border-white/20 [color-scheme:dark] text-xs px-2"
