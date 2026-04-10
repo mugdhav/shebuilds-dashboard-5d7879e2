@@ -23,6 +23,7 @@ const App = () => (
           <Route path="/" element={<Dashboard />} />
           <Route path="/admin" element={<AdminAuthGuard><AdminPanel /></AdminAuthGuard>} />
           <Route path="/submit" element={<BuilderSubmit />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/prep" element={<Prep />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
