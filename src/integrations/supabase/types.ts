@@ -125,6 +125,33 @@ export type Database = {
         }
         Relationships: []
       }
+      registrations: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: number
+          verification_token: string | null
+          verified: boolean
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: never
+          verification_token?: string | null
+          verified?: boolean
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: never
+          verification_token?: string | null
+          verified?: boolean
+        }
+        Relationships: []
+      }
       submissions: {
         Row: {
           app_link: string | null
