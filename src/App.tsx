@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import AdminPanel from "./pages/AdminPanel";
 import BuilderSubmit from "./pages/BuilderSubmit";
+import Register from "./pages/Register";
 import Prep from "./pages/Prep";
 import NotFound from "./pages/NotFound";
 import { AdminAuthGuard } from "./components/AdminAuth";
